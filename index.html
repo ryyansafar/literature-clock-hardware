@@ -32,21 +32,21 @@
             </div>
             
             <div class="controls-panel">
-                <div class="control-group">
-                    <span class="ctrl-label">GRID_COLS</span>
-                    <input type="number" id="inputCols" value="180" oninput="window.updateGridDimensions()">
-                </div>
-                <div class="control-group">
-                    <span class="ctrl-label">GRID_ROWS</span>
-                    <input type="number" id="inputRows" value="48" oninput="window.updateGridDimensions()">
-                </div>
                 <div id="dimReadout">
-                    <div id="dimLEDs" class="dim-stat">—</div>
-                    <div class="dim-label">DISCS_TOTAL</div>
+                    <div id="dimLEDs" class="dim-stat">229,200</div>
+                    <div class="dim-label">DISCS_ACTIVE</div>
+                </div>
+                <div class="system-meta">
+                    <div class="meta-row"><span>STATUS</span> <span class="log-ok">ONLINE</span></div>
+                    <div class="meta-row"><span>MODE</span> <span class="log-info">HI_CAPACITY</span></div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Hidden inputs for script compatibility (but removed from UI) -->
+    <input type="hidden" id="inputCols" value="191">
+    <input type="hidden" id="inputRows" value="1200">
 
     <script src="script.js"></script>
 </body>
