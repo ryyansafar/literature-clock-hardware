@@ -32,9 +32,9 @@
     // 191 cols / 6 pixels per char = 31 chars per line
     // 1200 rows / 8 pixels per char = 150 lines total
     let COLS_CHARS = 31;
-    let QUOTE_LINES = 140; // plenty of space for 4000+ chars
+    let QUOTE_LINES = 150; // Extra room for safe margins
     let ATTRIB_LINES = 6;
-    let SPACER_PX = 4;
+    let SPACER_PX = 10;
 
     // Derived — recalculated via recalcLayout()
     let GRID_W, QUOTE_H, ATTRIB_Y, ATTRIB_H, BRAND_Y, BRAND_H, GRID_H;
@@ -46,7 +46,7 @@
         ATTRIB_H = ATTRIB_LINES * CELL_H;
         BRAND_Y = ATTRIB_Y + ATTRIB_H + SPACER_PX;
         BRAND_H = CELL_H;
-        GRID_H = 1200; // FIXED
+        GRID_H = BRAND_Y + BRAND_H + 20; // 1200+ pixels total
     }
     recalcLayout();
 
@@ -190,25 +190,31 @@
     // ---- Canvas resize ----
     function resizeCanvas() {
         const dpr = window.devicePixelRatio || 1;
+        
+        // Horizontal scaling based on viewport
         const maxW = window.innerWidth;
-        const maxH = window.innerHeight;
-        const minPad = 40; // room for dimension annotations
-        const padFraction = 0.06;
+        const padFraction = 0.05;
         const availW = maxW * (1 - padFraction * 2);
-        const availH = maxH * (1 - padFraction * 2);
-        const ledSize = Math.floor(Math.min(availW / GRID_W, availH / GRID_H) * dpr) / dpr;
+        
+        // Fixed disc size for readability in vertical scroll mode
+        // 191 discs wide should fit reasonably on most screens
+        const ledSize = Math.max(3, Math.floor(availW / GRID_W)); 
 
-        const padX = Math.max(minPad, Math.ceil((maxW - ledSize * GRID_W) / 2));
-        const padY = Math.max(minPad, Math.ceil((maxH - ledSize * GRID_H) / 2));
+        const padX = Math.max(20, Math.ceil((maxW - ledSize * GRID_W) / 2));
+        const padY = 40; // Top margin
 
-        canvas.dataset.ledSize = ledSize;
-        canvas.dataset.padX = padX;
-        canvas.dataset.padY = padY;
-        canvas.width = maxW * dpr;
-        canvas.height = maxH * dpr;
-        canvas.style.width = maxW + 'px';
-        canvas.style.height = maxH + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        canvas.width = GRID_W * ledSize * dpr;
+        canvas.height = GRID_H * ledSize * dpr;
+        canvas.style.width = (GRID_W * ledSize) + 'px';
+        canvas.style.height = (GRID_H * ledSize) + 'px';
+        
+        // Center the canvas horizontally via style
+        canvas.style.marginLeft = padX + 'px';
+        canvas.style.marginTop = padY + 'px';
+        canvas.style.marginBottom = '100px'; // Space from system interface
+
+        ctx.scale(dpr, dpr);
+        paintDiscs();
     }
 
     // ---- LED Buffer Operations ----
